@@ -7,11 +7,16 @@ set -e
 
 LLAMA_CPP_DIR="$HOME/llama.cpp"
 
-echo ">™ Installing llama.cpp with CUDA support..."
+echo ">ï¿½ Installing llama.cpp with CUDA support..."
+
+# Add CUDA to PATH if installed
+if [ -d /opt/cuda/bin ]; then
+    export PATH="/opt/cuda/bin:$PATH"
+fi
 
 # Check if CUDA is available
 if ! command -v nvcc &> /dev/null; then
-    echo "L CUDA not found. Please run ./distros/arch/install.sh first"
+    echo "âŒ CUDA not found. Please run ./distros/omarchy/install.sh first"
     exit 1
 fi
 
@@ -19,12 +24,12 @@ echo " CUDA found: $(nvcc --version | grep release | cut -d' ' -f5-6)"
 
 # Remove existing installation if it exists
 if [ -d "$LLAMA_CPP_DIR" ]; then
-    echo "=Ñ  Removing existing llama.cpp installation..."
+    echo "=ï¿½  Removing existing llama.cpp installation..."
     rm -rf "$LLAMA_CPP_DIR"
 fi
 
 # Clone llama.cpp repository
-echo "=å Cloning llama.cpp repository..."
+echo "=ï¿½ Cloning llama.cpp repository..."
 git clone https://github.com/ggerganov/llama.cpp "$LLAMA_CPP_DIR"
 cd "$LLAMA_CPP_DIR"
 
@@ -49,11 +54,11 @@ if [ -f "./bin/llama-server" ]; then
     echo "Server binary: $LLAMA_CPP_DIR/build/bin/llama-server"
 
     # Test CUDA support
-    echo ">ê Testing CUDA support..."
+    echo ">ï¿½ Testing CUDA support..."
     if ./bin/llama-server --help | grep -q "gpu-layers"; then
         echo " CUDA support confirmed - GPU layers option available"
     else
-        echo "   Warning: GPU layers option not found in help output"
+        echo "ï¿½  Warning: GPU layers option not found in help output"
     fi
 else
     echo "L Build failed - server binary not found"
