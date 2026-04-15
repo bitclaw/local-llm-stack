@@ -54,6 +54,18 @@ Edit `engines/llama-cpp/config.env`:
 - `MODEL_PATH`: Path to model file
 - `CONTEXT_SIZE`: 16384 default
 
+See [engines/llama-cpp/CONFIG_GUIDE.md](engines/llama-cpp/CONFIG_GUIDE.md) for detailed tuning.
+
+### Quick VRAM Guide
+
+| GPU | VRAM | Recommended | Max Layers |
+|-----|-----|-------------|------------|
+| RTX 5050 | 8GB | 7B, CPU mode | 0 |
+| RTX 4060 | 8GB | 7B | 20-28 |
+| RTX 4070 | 12GB | 7B/14B | 28-35 |
+| RTX 4080 | 16GB | 14B | all |
+| RTX 4090 | 24GB | 14B/32B | all |
+
 ## Claude Code / OpenCode
 
 ```bash

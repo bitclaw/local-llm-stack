@@ -8,6 +8,7 @@
 - [x] Server runs (CPU mode for 8GB VRAM)
 - [x] Daemon mode for background operation
 - [x] README with basic troubleshooting
+- [x] CONFIG_GUIDE.md with VRAM tuning guide
 
 ## Known Issues
 
