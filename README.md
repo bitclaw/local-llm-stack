@@ -1,15 +1,19 @@
 # Local LLM Stack
 
-Fast, minimal, no vendor lock-in local LLM setup for Omarchy. Replace OpenAI/Anthropic APIs with a local stack optimized for development work.
+Fast, minimal local LLM setup for Omarchy. Replace OpenAI/Anthropic APIs with a local stack.
 
 ## Tested Hardware
 
-✅ **Reference Configuration:**
-- **GPU:** NVIDIA GeForce RTX 5050
-- **CPU:** AMD Ryzen 5 5600T (3.5-4.5 GHz)
+- **GPU:** NVIDIA GeForce RTX 5050 (8GB VRAM)
+- **CPU:** AMD Ryzen 5 5600T (6 cores, 12 threads)
 - **RAM:** 64GB DDR4 3200MHz
-- **Motherboard:** ASUS PRIME B550M-A AC
 - **OS:** Omarchy (Arch-based)
+
+## Tested Configuration
+
+**RTX 5050 8GB VRAM:** Uses CPU inference (GPU layers = 0) due to VRAM limitations.
+- 7B model works on CPU (~4.4 tokens/sec)
+- 14B+ models need more VRAM
 
 ## Quick Start
 
@@ -17,41 +21,92 @@ Fast, minimal, no vendor lock-in local LLM setup for Omarchy. Replace OpenAI/Ant
 git clone https://github.com/bitclaw/local-llm-stack.git
 cd local-llm-stack
 
-# Install dependencies and NVIDIA/CUDA (Omarchy-safe)
+# Install dependencies
+./distros/omarchy/packages.sh
 ./distros/omarchy/install.sh
 
-# Build and install llama.cpp
+# Build llama.cpp
 ./engines/llama-cpp/install.sh
 
-# Download recommended model
+# Download model (7B works with 8GB VRAM)
 ./models/download-qwen.sh
 
-# Start the local LLM server
+# Start server (CPU mode for 8GB VRAM)
 ./scripts/start.sh llama-cpp
 ```
 
-Your local OpenAI-compatible API will be running at `http://localhost:8000`
+Server runs at `http://localhost:8000`
 
-## Claude Code Integration
+### Background/Daemon Mode
+```bash
+./scripts/start.sh llama-cpp -d   # or --daemon
+```
 
-After starting the server, configure your environment:
+Server will run in background. Stop with:
+```bash
+pkill -f llama-server
+```
+
+## Configuration
+
+Edit `engines/llama-cpp/config.env`:
+- `GPU_LAYERS`: 0=CPU only, 20+=GPU (needs 10GB+ VRAM)
+- `MODEL_PATH`: Path to model file
+- `CONTEXT_SIZE`: 16384 default
+
+## Claude Code / OpenCode
 
 ```bash
 export OPENAI_API_BASE=http://localhost:8000/v1
 export OPENAI_API_KEY=sk-local
 ```
 
-In Claude Code or OpenCode, use:
-- **Provider:** OpenAI-compatible
-- **Base URL:** `http://localhost:8000/v1`
-- **Model:** `qwen2.5-coder` (or whatever model you loaded)
+Editor config:
+- Provider: OpenAI-compatible
+- Base URL: `http://localhost:8000/v1`
+- Model: `qwen2.5-coder`
 
-## Supported Engines
-- **llama.cpp** (recommended) - Fast, reliable, CUDA-optimized
-- **vLLM** (coming soon) - High throughput for multiple users
+## Model Recommendations
+
+| Model | Size | VRAM | Notes |
+|-------|------|-----|-------|
+| qwen-7b | 4.4GB | CPU | Works on CPU |
+| qwen-14b | 8.5GB | 10GB+ | Needs GPU |
+| qwen-32b | 19.6GB | 22GB+ | Needs powerful GPU |
+
+## Troubleshooting
+
+### Server won't start / Connection refused
+```bash
+# Check if already running
+pkill -f llama-server
+
+# Start in background
+./scripts/start.sh llama-cpp -d
+```
+
+### Out of memory (OOM)
+RTX 5050 8GB can't run with GPU. Set in config.env:
+```bash
+GPU_LAYERS=0  # CPU only
+```
+
+### CORS / Connection errors in browser
+- Use 127.0.0.1 instead of localhost
+- Check firewall: `sudo firewall-cmd --add-port=8000/tcp`
+
+### CUDA not found
+```bash
+export PATH="/opt/cuda/bin:$PATH"
+```
+
+### llama-server not found
+```bash
+export PATH="$HOME/llama.cpp/build/bin:$PATH"
+```
 
 ## System Requirements
-- **OS:** Omarchy (other Arch-based distros may work with modifications)
-- **Minimum:** 16GB RAM, any NVIDIA GPU with 6GB+ VRAM
-- **Recommended:** 32GB+ RAM, RTX 4060 or better
-- **Optimal:** 64GB RAM, RTX 4080+ (tested configuration above)
+
+- **OS:** Omarchy/Arch Linux
+- **RAM:** 16GB+ recommended
+- **GPU:** Any NVIDIA (8GB VRAM limited to CPU mode)

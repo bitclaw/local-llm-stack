@@ -22,6 +22,7 @@ usage() {
     echo "Options:"
     echo "  -h, --help   Show this help message"
     echo "  -v, --version Show version information"
+    echo "  -d, --daemon Run server in background"
     echo ""
     echo "Examples:"
     echo "  $0 llama-cpp           Start llama.cpp with default config"
@@ -75,7 +76,7 @@ start_llama_cpp() {
     fi
 
     echo "=� Executing: $run_script"
-    exec "$run_script"
+    exec "$run_script" "$@"
 }
 
 # Start vLLM engine
@@ -110,6 +111,15 @@ main() {
     local engine="$1"
     shift  # Remove engine from arguments
 
+    # Handle daemon mode flag
+    local daemon_flag=""
+    case "${1:-}" in
+        -d|--daemon)
+            daemon_flag="--daemon"
+            shift
+            ;;
+    esac
+
     # Display header
     echo "> Local LLM Stack Starter"
     echo "=========================="
@@ -121,7 +131,7 @@ main() {
     # Route to appropriate engine
     case "$engine" in
         llama-cpp|llamacpp)
-            start_llama_cpp "$@"
+            start_llama_cpp "$daemon_flag" "$@"
             ;;
         vllm)
             start_vllm "$@"

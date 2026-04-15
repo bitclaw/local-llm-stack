@@ -11,7 +11,7 @@ CONFIG_FILE="$SCRIPT_DIR/config.env"
 
 # Load configuration
 if [ -f "$CONFIG_FILE" ]; then
-    echo "=Ý Loading configuration from $CONFIG_FILE"
+    echo "=ï¿½ Loading configuration from $CONFIG_FILE"
     source "$CONFIG_FILE"
 else
     echo "L Configuration file not found: $CONFIG_FILE"
@@ -40,8 +40,8 @@ else
     exit 1
 fi
 
-echo ">™ Starting llama.cpp server..."
-echo "=Ë Configuration:"
+echo ">ï¿½ Starting llama.cpp server..."
+echo "=ï¿½ Configuration:"
 echo "  Model: $MODEL_PATH"
 echo "  Host: $HOST:$PORT"
 echo "  GPU Layers: $GPU_LAYERS"
@@ -65,8 +65,8 @@ CMD_ARGS=(
 )
 
 # Add optional flags
-if [ "$FLASH_ATTN" = "1" ]; then
-    CMD_ARGS+=(--flash-attn)
+if [ "$FLASH_ATTN" != "0" ]; then
+    CMD_ARGS+=(--flash-attn "$FLASH_ATTN")
 fi
 
 if [ "$MMAP" = "1" ]; then
@@ -81,21 +81,26 @@ if [ "$PARALLEL" = "1" ]; then
     CMD_ARGS+=(--parallel 1)
 fi
 
-# Add logging level
-CMD_ARGS+=(--log-format text)
-
-echo "=€ Starting server with command:"
+echo "=ï¿½ Starting server with command:"
 echo "${CMD_ARGS[*]}"
 echo ""
 echo "< Server will be available at: http://$HOST:$PORT"
-echo "=Ú API documentation: http://$HOST:$PORT/docs"
+echo "=ï¿½ API documentation: http://$HOST:$PORT/docs"
 echo "=' Health check: http://$HOST:$PORT/health"
 echo ""
 echo "Press Ctrl+C to stop the server"
 echo ""
 
 # Handle graceful shutdown
-trap 'echo ""; echo "=Ñ Shutting down server..."; exit 0' INT TERM
+trap 'echo ""; echo "Shutting down server..."; exit 0' INT TERM
+
+# Check for background mode
+if [ "$1" = "--daemon" ] || [ "$1" = "-d" ]; then
+    echo "Starting server in background..."
+    exec "${CMD_ARGS[@]}" &>/dev/null &
+    echo "Server started (PID: $!)"
+    exit 0
+fi
 
 # Start the server
 exec "${CMD_ARGS[@]}"
