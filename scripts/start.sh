@@ -34,7 +34,7 @@ usage() {
 # Print version information
 version() {
     echo "Local LLM Stack v1.0.0"
-    echo "Optimized for Arch Linux + NVIDIA GPUs"
+    echo "Optimized for Omarchy + NVIDIA GPUs"
     echo "Repository: https://github.com/bitclaw/local-llm-stack"
 }
 
@@ -42,21 +42,21 @@ version() {
 detect_distro() {
     if [ -f "$SCRIPT_DIR/detect-distro.sh" ]; then
         DISTRO=$("$SCRIPT_DIR/detect-distro.sh")
-        echo "=Ë Detected distribution: $DISTRO"
+        echo "=ï¿½ Detected distribution: $DISTRO"
 
-        if [ "$DISTRO" != "arch" ]; then
-            echo "   Warning: This tool is primarily tested on Arch Linux"
+        if [ "$DISTRO" != "omarchy" ] && [ "$DISTRO" != "arch" ]; then
+            echo "ï¿½  Warning: This tool is primarily tested on Omarchy"
             echo "   Detected: $DISTRO"
             echo "   Some features may not work as expected"
         fi
     else
-        echo "   Could not detect distribution"
+        echo "ï¿½  Could not detect distribution"
     fi
 }
 
 # Start llama.cpp engine
 start_llama_cpp() {
-    echo ">™ Starting llama.cpp engine..."
+    echo ">ï¿½ Starting llama.cpp engine..."
 
     local engine_dir="$ROOT_DIR/engines/llama-cpp"
     local run_script="$engine_dir/run.sh"
@@ -74,13 +74,13 @@ start_llama_cpp() {
         exit 1
     fi
 
-    echo "=€ Executing: $run_script"
+    echo "=ï¿½ Executing: $run_script"
     exec "$run_script"
 }
 
 # Start vLLM engine
 start_vllm() {
-    echo "=§ vLLM support is coming soon!"
+    echo "=ï¿½ vLLM support is coming soon!"
     echo "For now, please use: $0 llama-cpp"
     exit 1
 }

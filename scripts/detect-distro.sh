@@ -3,6 +3,12 @@
 # Local LLM Stack - Distribution Detection
 # Detects the Linux distribution for appropriate installation scripts
 
+# Check for Omarchy first (Arch-based)
+if [ -f /etc/omarchy-release ] || command -v omarchy &> /dev/null; then
+    echo "omarchy"
+    exit 0
+fi
+
 # Check for Arch Linux and derivatives
 if [ -f /etc/arch-release ]; then
     echo "arch"
@@ -61,6 +67,9 @@ fi
 if [ -f /etc/os-release ]; then
     source /etc/os-release
     case "$ID" in
+        omarchy)
+            echo "omarchy"
+            ;;
         arch|manjaro|endeavouros|arcolinux)
             echo "arch"
             ;;

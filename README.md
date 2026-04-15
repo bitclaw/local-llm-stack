@@ -1,6 +1,6 @@
 # Local LLM Stack
 
-Fast, minimal, no vendor lock-in local LLM setup for Arch Linux. Replace OpenAI/Anthropic APIs with a local stack optimized for development work.
+Fast, minimal, no vendor lock-in local LLM setup for Omarchy. Replace OpenAI/Anthropic APIs with a local stack optimized for development work.
 
 ## Tested Hardware
 
@@ -9,7 +9,7 @@ Fast, minimal, no vendor lock-in local LLM setup for Arch Linux. Replace OpenAI/
 - **CPU:** AMD Ryzen 5 5600T (3.5-4.5 GHz)
 - **RAM:** 64GB DDR4 3200MHz
 - **Motherboard:** ASUS PRIME B550M-A AC
-- **OS:** Arch Linux
+- **OS:** Omarchy (Arch-based)
 
 ## Quick Start
 
@@ -17,8 +17,8 @@ Fast, minimal, no vendor lock-in local LLM setup for Arch Linux. Replace OpenAI/
 git clone https://github.com/bitclaw/local-llm-stack.git
 cd local-llm-stack
 
-# Install dependencies and NVIDIA/CUDA
-./distros/arch/install.sh
+# Install dependencies and NVIDIA/CUDA (Omarchy-safe)
+./distros/omarchy/install.sh
 
 # Build and install llama.cpp
 ./engines/llama-cpp/install.sh
@@ -51,6 +51,7 @@ In Claude Code or OpenCode, use:
 - **vLLM** (coming soon) - High throughput for multiple users
 
 ## System Requirements
+- **OS:** Omarchy (other Arch-based distros may work with modifications)
 - **Minimum:** 16GB RAM, any NVIDIA GPU with 6GB+ VRAM
 - **Recommended:** 32GB+ RAM, RTX 4060 or better
 - **Optimal:** 64GB RAM, RTX 4080+ (tested configuration above)

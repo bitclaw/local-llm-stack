@@ -37,8 +37,10 @@ check_distribution() {
 
     if [ -f "$SCRIPT_DIR/detect-distro.sh" ]; then
         DISTRO=$("$SCRIPT_DIR/detect-distro.sh")
-        if [ "$DISTRO" = "arch" ]; then
-            echo_success "Arch Linux detected (fully supported)"
+        if [ "$DISTRO" = "omarchy" ]; then
+            echo_success "Omarchy detected (fully supported)"
+        elif [ "$DISTRO" = "arch" ]; then
+            echo_success "Arch Linux detected (supported)"
         elif [ "$DISTRO" = "unknown" ]; then
             echo_warning "Unknown distribution detected"
         else
@@ -255,7 +257,7 @@ generate_recommendations() {
         echo_warning "Found $ISSUES issue(s) that should be addressed"
         echo ""
         echo_info "Common fixes:"
-        echo "  • Install NVIDIA/CUDA: ./distros/arch/install.sh"
+        echo "  • Install NVIDIA/CUDA: ./distros/omarchy/install.sh"
         echo "  • Install llama.cpp: ./engines/llama-cpp/install.sh"
         echo "  • Download models: ./models/download-qwen.sh"
     fi
