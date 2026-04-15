@@ -21,7 +21,7 @@ ISSUES=0
 
 echo_info() { echo -e "${BLUE}9  $1${NC}"; }
 echo_success() { echo -e "${GREEN} $1${NC}"; }
-echo_warning() { echo -e "${YELLOW}   $1${NC}"; ((ISSUES++)); }
+echo_warning() { echo -e "${YELLOW}ï¿½  $1${NC}"; ((ISSUES++)); }
 echo_error() { echo -e "${RED}L $1${NC}"; ((ISSUES++)); }
 
 # Print header
@@ -243,7 +243,7 @@ generate_recommendations() {
     echo_info "Generating recommendations..."
 
     if [ $ISSUES -eq 0 ]; then
-        echo_success "System is ready for local LLM setup! <‰"
+        echo_success "System is ready for local LLM setup! <ï¿½"
         echo ""
         echo_info "Quick start:"
         echo "  1. Download a model: ./models/download-qwen.sh"
@@ -255,9 +255,9 @@ generate_recommendations() {
         echo_warning "Found $ISSUES issue(s) that should be addressed"
         echo ""
         echo_info "Common fixes:"
-        echo "  " Install NVIDIA/CUDA: ./distros/arch/install.sh"
-        echo "  " Install llama.cpp: ./engines/llama-cpp/install.sh"
-        echo "  " Download models: ./models/download-qwen.sh"
+        echo "  â€¢ Install NVIDIA/CUDA: ./distros/arch/install.sh"
+        echo "  â€¢ Install llama.cpp: ./engines/llama-cpp/install.sh"
+        echo "  â€¢ Download models: ./models/download-qwen.sh"
     fi
 
     echo ""
