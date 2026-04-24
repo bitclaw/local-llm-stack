@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Local LLM Stack - Qwen2.5-Coder Model Downloader
-# Downloads recommended Qwen2.5-Coder models for development work
+# Local LLM Stack - Qwen Model Downloader
+# Downloads recommended Qwen GGUF models for development work
 
 set -e
 
@@ -15,6 +15,7 @@ MODELS=(
     "qwen-7b|Qwen/Qwen2.5-Coder-7B-Instruct-GGUF|qwen2.5-coder-7b-instruct-q4_k_m.gguf|Fast 7B model for basic coding|4.4GB"
     "qwen-14b|Qwen/Qwen2.5-Coder-14B-Instruct-GGUF|qwen2.5-coder-14b-instruct-q4_k_m.gguf|Balanced 14B model for most tasks (recommended)|8.5GB"
     "qwen-32b|Qwen/Qwen2.5-Coder-32B-Instruct-GGUF|qwen2.5-coder-32b-instruct-q4_k_m.gguf|Large 32B model for complex tasks|19.6GB"
+    "qwen3.6-35b-a3b-q4|sharpcaterpillar/Qwen3.6-35B-A3B-GGUF|Qwen3.6-35B-A3B-Q4_K_M.gguf|Qwen 3.6 sparse MoE stretch target for 64GB RAM systems|20.5GB"
 )
 
 # Colors for output
@@ -30,10 +31,11 @@ echo_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
 echo_error() { echo -e "${RED}❌ $1${NC}"; }
 
 print_header() {
-    echo "📥 Qwen2.5-Coder Model Downloader"
-    echo "=================================="
+    echo "📥 Qwen Model Downloader"
+    echo "========================"
     echo ""
     echo "This script downloads optimized GGUF models for local development."
+    echo "Larger Qwen 3.6 models need a recent llama.cpp build and more tuning."
     echo "Models are saved to: $MODELS_DIR"
     echo ""
 }
@@ -140,7 +142,7 @@ interactive_download() {
         read -p "Select model to download (number, 'a' for all, 'q' to quit): " choice
 
         case $choice in
-            [1-3])
+            [1-4])
                 local index=$((choice - 1))
                 local model_def="${MODELS[$index]}"
                 IFS='|' read -r name repo file desc size <<< "$model_def"
@@ -220,6 +222,11 @@ main() {
             32b|qwen-32b)
                 download_model "Qwen/Qwen2.5-Coder-32B-Instruct-GGUF" "qwen2.5-coder-32b-instruct-q4_k_m.gguf" "qwen-32b"
                 ;;
+            qwen3.6|qwen3.6-35b-a3b|qwen3.6-35b-a3b-q4)
+                echo_warning "Qwen 3.6 35B-A3B is a stretch target on 8GB VRAM."
+                echo_warning "Start with low context and GPU_LAYERS=0, then test partial offload carefully."
+                download_model "sharpcaterpillar/Qwen3.6-35B-A3B-GGUF" "Qwen3.6-35B-A3B-Q4_K_M.gguf" "qwen3.6-35b-a3b-q4"
+                ;;
             --help|-h)
                 echo "Usage: $0 [model]"
                 echo ""
@@ -227,6 +234,7 @@ main() {
                 echo "  7b, qwen-7b     Download 7B model"
                 echo "  14b, qwen-14b   Download 14B model (recommended)"
                 echo "  32b, qwen-32b   Download 32B model"
+                echo "  qwen3.6         Download Qwen3.6-35B-A3B Q4_K_M"
                 echo "  default         Download 14B model"
                 echo ""
                 echo "If no model specified, interactive selection is shown."
